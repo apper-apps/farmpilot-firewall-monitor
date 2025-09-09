@@ -14,19 +14,19 @@ import cropService from "@/services/api/cropService";
 
 const FarmModal = ({ isOpen, onClose, farm, onSave }) => {
   const [formData, setFormData] = useState({
-    name: "",
-    size: "",
-    sizeUnit: "acres",
-    location: ""
+name_c: "",
+    size_c: "",
+    size_unit_c: "acres",
+    location_c: ""
   });
 
-  useEffect(() => {
+useEffect(() => {
     if (farm) {
       setFormData({
-        name: farm.name,
-        size: farm.size.toString(),
-        sizeUnit: farm.sizeUnit,
-        location: farm.location
+        name_c: farm.name_c || farm.Name,
+        size_c: farm.size_c?.toString() || "",
+        size_unit_c: farm.size_unit_c || "acres",
+        location_c: farm.location_c
       });
     } else {
       setFormData({
@@ -47,9 +47,9 @@ const FarmModal = ({ isOpen, onClose, farm, onSave }) => {
     }
 
     const farmData = {
-      ...formData,
-      size: parseFloat(formData.size),
-      createdAt: farm?.createdAt || new Date().toISOString()
+...formData,
+      size_c: parseFloat(formData.size_c),
+      created_at_c: farm?.created_at_c || new Date().toISOString()
     };
 
     try {
@@ -183,8 +183,8 @@ const Farms = () => {
       setFilteredFarms(farms);
     } else {
       const filtered = farms.filter(farm =>
-        farm.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        farm.location.toLowerCase().includes(searchTerm.toLowerCase())
+(farm.name_c || farm.Name)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        farm.location_c?.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredFarms(filtered);
     }
@@ -245,7 +245,7 @@ const Farms = () => {
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-secondary-500 rounded-full"></div>
-            <span>{crops.filter(c => c.status === "Growing").length} Active Crops</span>
+<span>{crops.filter(c => c.status_c === "Growing").length} Active Crops</span>
           </div>
         </div>
       </div>

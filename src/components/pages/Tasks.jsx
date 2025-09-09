@@ -14,52 +14,52 @@ import farmService from "@/services/api/farmService";
 import cropService from "@/services/api/cropService";
 
 const TaskModal = ({ isOpen, onClose, task, farms, crops, onSave }) => {
-  const [formData, setFormData] = useState({
-    farmId: "",
-    cropId: "",
-    title: "",
-    type: "",
-    dueDate: "",
-    priority: "Medium"
+const [formData, setFormData] = useState({
+    farm_id_c: "",
+    crop_id_c: "",
+    title_c: "",
+    type_c: "",
+    due_date_c: "",
+    priority_c: "Medium"
   });
 
-  useEffect(() => {
+useEffect(() => {
     if (task) {
       setFormData({
-        farmId: task.farmId.toString(),
-        cropId: task.cropId?.toString() || "",
-        title: task.title,
-        type: task.type,
-        dueDate: task.dueDate.split("T")[0],
-        priority: task.priority
+        farm_id_c: task.farm_id_c?.Id ? task.farm_id_c.Id.toString() : task.farm_id_c.toString(),
+        crop_id_c: task.crop_id_c?.Id ? task.crop_id_c.Id.toString() : task.crop_id_c?.toString() || "",
+        title_c: task.title_c,
+        type_c: task.type_c,
+        due_date_c: task.due_date_c?.split("T")[0] || task.due_date_c,
+        priority_c: task.priority_c
       });
     } else {
       setFormData({
-        farmId: "",
-        cropId: "",
-        title: "",
-        type: "",
-        dueDate: "",
-        priority: "Medium"
+        farm_id_c: "",
+        crop_id_c: "",
+        title_c: "",
+        type_c: "",
+        due_date_c: "",
+        priority_c: "Medium"
       });
     }
   }, [task]);
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.farmId || !formData.title.trim() || !formData.type || !formData.dueDate) {
+    if (!formData.farm_id_c || !formData.title_c.trim() || !formData.type_c || !formData.due_date_c) {
       toast.error("Please fill in all required fields");
       return;
     }
 
     const taskData = {
       ...formData,
-      farmId: parseInt(formData.farmId),
-      cropId: formData.cropId ? parseInt(formData.cropId) : null,
-      dueDate: new Date(formData.dueDate).toISOString(),
-      completed: task?.completed || false,
-      completedDate: task?.completedDate || null
+      farm_id_c: parseInt(formData.farm_id_c),
+      crop_id_c: formData.crop_id_c ? parseInt(formData.crop_id_c) : null,
+      due_date_c: formData.due_date_c,
+      completed_c: task?.completed_c || false,
+      completed_date_c: task?.completed_date_c || null
     };
 
     try {
@@ -90,8 +90,8 @@ const TaskModal = ({ isOpen, onClose, task, farms, crops, onSave }) => {
     { value: "High", label: "High Priority" }
   ];
 
-  const farmCrops = crops.filter(crop => 
-    formData.farmId ? crop.farmId === parseInt(formData.farmId) : false
+const farmCrops = crops.filter(crop => 
+    formData.farm_id_c ? (crop.farm_id_c?.Id || crop.farm_id_c) === parseInt(formData.farm_id_c) : false
   );
 
   return (
@@ -117,56 +117,56 @@ const TaskModal = ({ isOpen, onClose, task, farms, crops, onSave }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <FormField
+<FormField
             label="Farm"
             type="select"
-            value={formData.farmId}
-            onChange={(e) => setFormData({...formData, farmId: e.target.value, cropId: ""})}
-            options={farms.map(farm => ({ value: farm.Id.toString(), label: farm.name }))}
+            value={formData.farm_id_c}
+            onChange={(e) => setFormData({...formData, farm_id_c: e.target.value, crop_id_c: ""})}
+            options={farms.map(farm => ({ value: farm.Id.toString(), label: farm.name_c || farm.Name }))}
             required
           />
 
           <FormField
-            label="Crop (Optional)"
+label="Crop (Optional)"
             type="select"
-            value={formData.cropId}
-            onChange={(e) => setFormData({...formData, cropId: e.target.value})}
+            value={formData.crop_id_c}
+            onChange={(e) => setFormData({...formData, crop_id_c: e.target.value})}
             options={farmCrops.map(crop => ({ 
               value: crop.Id.toString(), 
-              label: `${crop.cropType} (${crop.field})` 
+              label: `${crop.crop_type_c} (${crop.field_c})` 
             }))}
           />
 
           <FormField
-            label="Task Title"
-            value={formData.title}
-            onChange={(e) => setFormData({...formData, title: e.target.value})}
+label="Task Title"
+            value={formData.title_c}
+            onChange={(e) => setFormData({...formData, title_c: e.target.value})}
             placeholder="e.g., Water tomato plants"
             required
           />
 
-          <FormField
+<FormField
             label="Task Type"
             type="select"
-            value={formData.type}
-            onChange={(e) => setFormData({...formData, type: e.target.value})}
+            value={formData.type_c}
+            onChange={(e) => setFormData({...formData, type_c: e.target.value})}
             options={taskTypes.map(type => ({ value: type, label: type }))}
             required
           />
 
           <div className="grid grid-cols-2 gap-4">
             <FormField
-              label="Due Date"
+label="Due Date"
               type="date"
-              value={formData.dueDate}
-              onChange={(e) => setFormData({...formData, dueDate: e.target.value})}
+              value={formData.due_date_c}
+              onChange={(e) => setFormData({...formData, due_date_c: e.target.value})}
               required
             />
             <FormField
-              label="Priority"
+label="Priority"
               type="select"
-              value={formData.priority}
-              onChange={(e) => setFormData({...formData, priority: e.target.value})}
+              value={formData.priority_c}
+              onChange={(e) => setFormData({...formData, priority_c: e.target.value})}
               options={priorityOptions}
             />
           </div>
@@ -225,14 +225,14 @@ const Tasks = () => {
   useEffect(() => {
     let filtered = tasks;
     
-    if (filterStatus === "pending") {
-      filtered = filtered.filter(task => !task.completed);
+if (filterStatus === "pending") {
+      filtered = filtered.filter(task => !task.completed_c);
     } else if (filterStatus === "completed") {
-      filtered = filtered.filter(task => task.completed);
+filtered = filtered.filter(task => task.completed_c);
     } else if (filterStatus === "overdue") {
       const now = new Date();
       filtered = filtered.filter(task => 
-        !task.completed && new Date(task.dueDate) < now
+        !task.completed_c && new Date(task.due_date_c) < now
       );
     }
 
@@ -243,9 +243,9 @@ const Tasks = () => {
     if (!searchTerm.trim()) {
       setFilteredTasks(tasks);
     } else {
-      const filtered = tasks.filter(task =>
-        task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        task.type.toLowerCase().includes(searchTerm.toLowerCase())
+const filtered = tasks.filter(task =>
+        task.title_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        task.type_c?.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredTasks(filtered);
     }
@@ -279,10 +279,10 @@ const Tasks = () => {
       const task = tasks.find(t => t.Id === taskId);
       if (!task) return;
 
-      const updatedTask = {
+const updatedTask = {
         ...task,
-        completed: !task.completed,
-        completedDate: !task.completed ? new Date().toISOString() : null
+        completed_c: !task.completed_c,
+        completed_date_c: !task.completed_c ? new Date().toISOString() : null
       };
 
       await taskService.update(taskId, updatedTask);
@@ -302,9 +302,9 @@ const Tasks = () => {
   const now = new Date();
   const taskStats = {
     all: tasks.length,
-    pending: tasks.filter(t => !t.completed).length,
-    completed: tasks.filter(t => t.completed).length,
-    overdue: tasks.filter(t => !t.completed && new Date(t.dueDate) < now).length
+pending: tasks.filter(t => !t.completed_c).length,
+    completed: tasks.filter(t => t.completed_c).length,
+    overdue: tasks.filter(t => !t.completed_c && new Date(t.due_date_c) < now).length
   };
 
   return (

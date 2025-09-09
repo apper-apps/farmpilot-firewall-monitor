@@ -37,10 +37,10 @@ const Weather = () => {
   const currentWeather = weatherData[0];
   const upcomingWeather = weatherData.slice(1);
 
-  const getAgriculturalAdvice = (weather) => {
+const getAgriculturalAdvice = (weather) => {
     const advice = [];
     
-    if (weather.temperature > 85) {
+    if (weather.temperature_c > 85) {
       advice.push({ 
         type: "warning", 
         text: "High temperatures expected. Increase watering frequency.", 
@@ -48,7 +48,7 @@ const Weather = () => {
       });
     }
     
-    if (weather.precipitation > 70) {
+    if (weather.precipitation_c > 70) {
       advice.push({ 
         type: "info", 
         text: "High chance of rain. Consider postponing outdoor activities.", 
@@ -56,7 +56,7 @@ const Weather = () => {
       });
     }
     
-    if (weather.wind > 15) {
+    if (weather.wind_c > 15) {
       advice.push({ 
         type: "caution", 
         text: "Strong winds forecasted. Secure loose equipment.", 
@@ -64,7 +64,7 @@ const Weather = () => {
       });
     }
     
-    if (weather.temperature < 40) {
+    if (weather.temperature_c < 40) {
       advice.push({ 
         type: "danger", 
         text: "Cold temperatures may affect sensitive crops. Consider protection.", 
@@ -122,11 +122,11 @@ const Weather = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">Today's Weather</h2>
-                  <p className="opacity-90">{currentWeather.date}</p>
+<p className="opacity-90">{currentWeather.date_c}</p>
                 </div>
                 <div className="text-right">
-                  <div className="text-4xl font-bold">{currentWeather.temperature}°F</div>
-                  <div className="opacity-90 capitalize">{currentWeather.condition}</div>
+                  <div className="text-4xl font-bold">{currentWeather.temperature_c}°F</div>
+                  <div className="opacity-90 capitalize">{currentWeather.condition_c}</div>
                 </div>
               </div>
             </CardHeader>
@@ -136,28 +136,28 @@ const Weather = () => {
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-2">
                     <ApperIcon name="Droplets" className="h-6 w-6 text-white" />
                   </div>
-                  <div className="text-2xl font-bold text-primary-700">{currentWeather.precipitation}%</div>
+<div className="text-2xl font-bold text-primary-700">{currentWeather.precipitation_c}%</div>
                   <div className="text-sm text-gray-500">Precipitation</div>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center mx-auto mb-2">
                     <ApperIcon name="Wind" className="h-6 w-6 text-white" />
                   </div>
-                  <div className="text-2xl font-bold text-primary-700">{currentWeather.wind} mph</div>
+<div className="text-2xl font-bold text-primary-700">{currentWeather.wind_c} mph</div>
                   <div className="text-sm text-gray-500">Wind Speed</div>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-gradient-to-br from-accent-500 to-accent-600 rounded-full flex items-center justify-center mx-auto mb-2">
                     <ApperIcon name="Gauge" className="h-6 w-6 text-white" />
                   </div>
-                  <div className="text-2xl font-bold text-primary-700">{currentWeather.humidity || 65}%</div>
+<div className="text-2xl font-bold text-primary-700">{currentWeather.humidity_c || 65}%</div>
                   <div className="text-sm text-gray-500">Humidity</div>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-2">
                     <ApperIcon name="Sun" className="h-6 w-6 text-white" />
                   </div>
-                  <div className="text-2xl font-bold text-primary-700">{currentWeather.uv || 6}</div>
+<div className="text-2xl font-bold text-primary-700">{currentWeather.uv_c || 6}</div>
                   <div className="text-sm text-gray-500">UV Index</div>
                 </div>
               </div>

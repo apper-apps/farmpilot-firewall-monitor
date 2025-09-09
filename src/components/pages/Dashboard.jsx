@@ -58,23 +58,22 @@ const Dashboard = () => {
   if (loading) return <Loading />;
   if (error) return <Error title="Dashboard Error" message={error} onRetry={loadData} />;
 
-  const activeCrops = data.crops.filter(crop => crop.status === "Growing");
+const activeCrops = data.crops.filter(crop => crop.status_c === "Growing");
   const upcomingTasks = data.tasks
-    .filter(task => !task.completed)
-    .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+.filter(task => !task.completed_c)
+    .sort((a, b) => new Date(a.due_date_c) - new Date(b.due_date_c))
     .slice(0, 5);
-  
   const recentTransactions = data.transactions
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
+.sort((a, b) => new Date(b.date_c) - new Date(a.date_c))
     .slice(0, 5);
 
   const totalIncome = data.transactions
     .filter(t => t.type === "income")
-    .reduce((sum, t) => sum + t.amount, 0);
+.reduce((sum, t) => sum + t.amount_c, 0);
   
   const totalExpenses = data.transactions
     .filter(t => t.type === "expense")
-    .reduce((sum, t) => sum + t.amount, 0);
+.reduce((sum, t) => sum + t.amount_c, 0);
 
   const profit = totalIncome - totalExpenses;
 
@@ -255,8 +254,8 @@ const Dashboard = () => {
                           <ApperIcon name={getTaskIcon(task.type)} className="h-4 w-4 text-white" />
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900">{task.title}</p>
-                          <p className="text-sm text-gray-500">Due: {format(new Date(task.dueDate), "MMM dd")}</p>
+<p className="font-medium text-gray-900">{task.title_c}</p>
+                          <p className="text-sm text-gray-500">Due: {format(new Date(task.due_date_c), "MMM dd")}</p>
                         </div>
                       </div>
                       <Badge variant={getPriorityVariant(task.priority)} className="text-xs">
@@ -310,8 +309,8 @@ const Dashboard = () => {
                           <ApperIcon name="DollarSign" className="h-4 w-4 text-white" />
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900">{transaction.description || transaction.category}</p>
-                          <p className="text-sm text-gray-500">{format(new Date(transaction.date), "MMM dd")}</p>
+<p className="font-medium text-gray-900">{transaction.description_c || transaction.category_c}</p>
+                          <p className="text-sm text-gray-500">{format(new Date(transaction.date_c), "MMM dd")}</p>
                         </div>
                       </div>
                       <div className={`font-bold ${

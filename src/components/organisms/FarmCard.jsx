@@ -6,8 +6,7 @@ import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
 
 const FarmCard = ({ farm, onEdit, onDelete, crops = [], index = 0 }) => {
-  const activeCropsCount = crops.filter(crop => crop.farmId === farm.Id && crop.status === "Growing").length;
-  
+const activeCropsCount = crops.filter(crop => (crop.farm_id_c?.Id || crop.farm_id_c) === farm.Id && crop.status_c === "Growing").length;
   const handleEdit = () => {
     onEdit(farm);
   };
@@ -35,10 +34,10 @@ const FarmCard = ({ farm, onEdit, onDelete, crops = [], index = 0 }) => {
                   <ApperIcon name="MapPin" className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-primary-700 group-hover:text-primary-800 transition-colors">
-                    {farm.name}
+<h3 className="text-lg font-bold text-primary-700 group-hover:text-primary-800 transition-colors">
+                    {farm.name_c || farm.Name}
                   </h3>
-                  <p className="text-sm text-gray-500">{farm.location}</p>
+                  <p className="text-sm text-gray-500">{farm.location_c}</p>
                 </div>
               </div>
               <Badge variant="primary" className="text-xs">
@@ -52,8 +51,8 @@ const FarmCard = ({ farm, onEdit, onDelete, crops = [], index = 0 }) => {
                 <div className="flex items-center space-x-2">
                   <ApperIcon name="Maximize2" className="h-4 w-4 text-primary-500" />
                   <div>
-                    <p className="text-xs text-gray-500">Size</p>
-                    <p className="font-semibold text-gray-700">{farm.size} {farm.sizeUnit}</p>
+<p className="text-xs text-gray-500">Size</p>
+                    <p className="font-semibold text-gray-700">{farm.size_c} {farm.size_unit_c}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -61,7 +60,7 @@ const FarmCard = ({ farm, onEdit, onDelete, crops = [], index = 0 }) => {
                   <div>
                     <p className="text-xs text-gray-500">Created</p>
                     <p className="font-semibold text-gray-700">
-                      {new Date(farm.createdAt).toLocaleDateString()}
+                      {new Date(farm.created_at_c).toLocaleDateString()}
                     </p>
                   </div>
                 </div>

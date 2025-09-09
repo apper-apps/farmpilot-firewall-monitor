@@ -1,9 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-import Sidebar from "@/components/organisms/Sidebar";
-import MobileSidebar from "@/components/organisms/MobileSidebar";
 import ApperIcon from "@/components/ApperIcon";
-
+import MobileSidebar from "@/components/organisms/MobileSidebar";
+import Sidebar from "@/components/organisms/Sidebar";
+import LogoutButton from "@/components/LogoutButton";
 const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -27,7 +27,7 @@ const Layout = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
-        <header className="lg:hidden bg-white shadow-sm border-b border-gray-200 px-4 py-3">
+<header className="lg:hidden bg-white shadow-sm border-b border-gray-200 px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <button
@@ -43,6 +43,7 @@ const Layout = () => {
                 <h1 className="text-xl font-bold text-primary-700">FarmPilot</h1>
               </div>
             </div>
+            <LogoutButton />
           </div>
         </header>
 

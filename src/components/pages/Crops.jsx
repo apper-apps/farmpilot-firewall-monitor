@@ -14,25 +14,25 @@ import farmService from "@/services/api/farmService";
 
 const CropModal = ({ isOpen, onClose, crop, farms, onSave }) => {
   const [formData, setFormData] = useState({
-    farmId: "",
-    cropType: "",
-    field: "",
-    plantingDate: "",
-    expectedHarvest: "",
-    status: "Planned",
-    notes: ""
+farm_id_c: "",
+    crop_type_c: "",
+    field_c: "",
+    planting_date_c: "",
+    expected_harvest_c: "",
+    status_c: "Planned",
+    notes_c: ""
   });
 
   useEffect(() => {
-    if (crop) {
+if (crop) {
       setFormData({
-        farmId: crop.farmId.toString(),
-        cropType: crop.cropType,
-        field: crop.field,
-        plantingDate: crop.plantingDate.split("T")[0],
-        expectedHarvest: crop.expectedHarvest.split("T")[0],
-        status: crop.status,
-        notes: crop.notes || ""
+        farm_id_c: crop.farm_id_c?.Id ? crop.farm_id_c.Id.toString() : crop.farm_id_c.toString(),
+        crop_type_c: crop.crop_type_c,
+        field_c: crop.field_c,
+        planting_date_c: crop.planting_date_c?.split("T")[0] || crop.planting_date_c,
+        expected_harvest_c: crop.expected_harvest_c?.split("T")[0] || crop.expected_harvest_c,
+        status_c: crop.status_c,
+        notes_c: crop.notes_c || ""
       });
     } else {
       setFormData({
@@ -55,11 +55,11 @@ const CropModal = ({ isOpen, onClose, crop, farms, onSave }) => {
       return;
     }
 
-    const cropData = {
+const cropData = {
       ...formData,
-      farmId: parseInt(formData.farmId),
-      plantingDate: new Date(formData.plantingDate).toISOString(),
-      expectedHarvest: new Date(formData.expectedHarvest).toISOString()
+      farm_id_c: parseInt(formData.farm_id_c),
+      planting_date_c: formData.planting_date_c,
+      expected_harvest_c: formData.expected_harvest_c
     };
 
     try {
@@ -120,7 +120,7 @@ const CropModal = ({ isOpen, onClose, crop, farms, onSave }) => {
             type="select"
             value={formData.farmId}
             onChange={(e) => setFormData({...formData, farmId: e.target.value})}
-            options={farms.map(farm => ({ value: farm.Id.toString(), label: farm.name }))}
+options={farms.map(farm => ({ value: farm.Id.toString(), label: farm.name_c || farm.Name }))}
             required
           />
 
@@ -225,8 +225,8 @@ const Crops = () => {
   useEffect(() => {
     let filtered = crops;
     
-    if (filterStatus !== "all") {
-      filtered = filtered.filter(crop => crop.status.toLowerCase() === filterStatus);
+if (filterStatus !== "all") {
+      filtered = filtered.filter(crop => crop.status_c?.toLowerCase() === filterStatus);
     }
 
     setFilteredCrops(filtered);
@@ -237,8 +237,8 @@ const Crops = () => {
       setFilteredCrops(crops);
     } else {
       const filtered = crops.filter(crop =>
-        crop.cropType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        crop.field.toLowerCase().includes(searchTerm.toLowerCase())
+crop.crop_type_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        crop.field_c?.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredCrops(filtered);
     }
@@ -275,10 +275,10 @@ const Crops = () => {
   if (error) return <Error title="Failed to load crops" message={error} onRetry={loadData} />;
 
   const statusStats = {
-    all: crops.length,
-    planned: crops.filter(c => c.status.toLowerCase() === "planned").length,
-    growing: crops.filter(c => c.status.toLowerCase() === "growing").length,
-    harvested: crops.filter(c => c.status.toLowerCase() === "harvested").length
+all: crops.length,
+    planned: crops.filter(c => c.status_c?.toLowerCase() === "planned").length,
+    growing: crops.filter(c => c.status_c?.toLowerCase() === "growing").length,
+    harvested: crops.filter(c => c.status_c?.toLowerCase() === "harvested").length
   };
 
   return (

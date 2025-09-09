@@ -7,14 +7,14 @@ import Button from "@/components/atoms/Button";
 import { Card, CardContent } from "@/components/atoms/Card";
 
 const TaskList = ({ tasks, farms, crops, onToggleComplete, onEdit, onDelete }) => {
-  const getFarmName = (farmId) => {
-    const farm = farms.find(f => f.Id === farmId);
-    return farm?.name || "Unknown Farm";
+const getFarmName = (farmId) => {
+    const farm = farms.find(f => f.Id === (farmId?.Id || farmId));
+    return farm?.name_c || farm?.Name || "Unknown Farm";
   };
 
-  const getCropName = (cropId) => {
-    const crop = crops.find(c => c.Id === cropId);
-    return crop?.cropType || "General";
+const getCropName = (cropId) => {
+    const crop = crops.find(c => c.Id === (cropId?.Id || cropId));
+    return crop?.crop_type_c || "General";
   };
 
   const getPriorityVariant = (priority) => {
@@ -49,7 +49,7 @@ const TaskList = ({ tasks, farms, crops, onToggleComplete, onEdit, onDelete }) =
 
   const handleToggleComplete = (task) => {
     onToggleComplete(task.Id);
-    toast.success(task.completed ? "Task marked as incomplete" : "Task completed!");
+toast.success(task.completed_c ? "Task marked as incomplete" : "Task completed!");
   };
 
   const handleDelete = (taskId) => {
@@ -64,7 +64,7 @@ const TaskList = ({ tasks, farms, crops, onToggleComplete, onEdit, onDelete }) =
   };
 
   const groupedTasks = tasks.reduce((groups, task) => {
-    const date = format(new Date(task.dueDate), "yyyy-MM-dd");
+const date = format(new Date(task.due_date_c), "yyyy-MM-dd");
     if (!groups[date]) {
       groups[date] = [];
     }
@@ -125,14 +125,14 @@ const TaskList = ({ tasks, farms, crops, onToggleComplete, onEdit, onDelete }) =
                       <div className="flex items-start space-x-4">
                         {/* Checkbox */}
                         <button
-                          onClick={() => handleToggleComplete(task)}
+onClick={() => handleToggleComplete(task)}
                           className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center transition-all duration-200 ${
-                            task.completed
+                            task.completed_c
                               ? "bg-secondary-500 border-secondary-500"
                               : "border-gray-300 hover:border-secondary-500"
                           }`}
                         >
-                          {task.completed && (
+                          {task.completed_c && (
                             <ApperIcon name="Check" className="h-3 w-3 text-white" />
                           )}
                         </button>
@@ -144,26 +144,26 @@ const TaskList = ({ tasks, farms, crops, onToggleComplete, onEdit, onDelete }) =
                               <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                                 task.completed ? "bg-gray-300" : "bg-gradient-to-br from-primary-500 to-secondary-500"
                               }`}>
-                                <ApperIcon 
-                                  name={getTaskIcon(task.type)} 
+<ApperIcon 
+                                  name={getTaskIcon(task.type_c)} 
                                   className="h-4 w-4 text-white" 
                                 />
                               </div>
                               <div>
                                 <h4 className={`font-semibold ${
-                                  task.completed ? "line-through text-gray-500" : "text-gray-900"
+                                  task.completed_c ? "line-through text-gray-500" : "text-gray-900"
                                 }`}>
-                                  {task.title}
+                                  {task.title_c}
                                 </h4>
                                 <div className="flex items-center space-x-2 mt-1">
                                   <span className="text-sm text-gray-500">
-                                    {getFarmName(task.farmId)}
+{getFarmName(task.farm_id_c)}
                                   </span>
-                                  {task.cropId && (
+                                  {task.crop_id_c && (
                                     <>
                                       <span className="text-gray-300">•</span>
                                       <span className="text-sm text-gray-500">
-                                        {getCropName(task.cropId)}
+                                        {getCropName(task.crop_id_c)}
                                       </span>
                                     </>
                                   )}
@@ -172,8 +172,8 @@ const TaskList = ({ tasks, farms, crops, onToggleComplete, onEdit, onDelete }) =
                             </div>
 
                             <div className="flex items-center space-x-2">
-                              <Badge variant={getPriorityVariant(task.priority)} className="text-xs">
-                                {task.priority}
+<Badge variant={getPriorityVariant(task.priority_c)} className="text-xs">
+                                {task.priority_c}
                               </Badge>
                               <div className="flex space-x-1">
                                 <Button

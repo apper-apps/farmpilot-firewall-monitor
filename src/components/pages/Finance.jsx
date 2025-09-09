@@ -16,23 +16,23 @@ import farmService from "@/services/api/farmService";
 
 const TransactionModal = ({ isOpen, onClose, transaction, farms, onSave }) => {
   const [formData, setFormData] = useState({
-    farmId: "",
-    type: "expense",
-    category: "",
-    amount: "",
-    date: "",
-    description: ""
+farm_id_c: "",
+    type_c: "expense",
+    category_c: "",
+    amount_c: "",
+    date_c: "",
+    description_c: ""
   });
 
   useEffect(() => {
-    if (transaction) {
+if (transaction) {
       setFormData({
-        farmId: transaction.farmId.toString(),
-        type: transaction.type,
-        category: transaction.category,
-        amount: transaction.amount.toString(),
-        date: transaction.date.split("T")[0],
-        description: transaction.description || ""
+        farm_id_c: transaction.farm_id_c?.Id ? transaction.farm_id_c.Id.toString() : transaction.farm_id_c.toString(),
+        type_c: transaction.type_c,
+        category_c: transaction.category_c,
+        amount_c: transaction.amount_c?.toString() || "",
+        date_c: transaction.date_c?.split("T")[0] || transaction.date_c,
+        description_c: transaction.description_c || ""
       });
     } else {
       setFormData({
@@ -55,10 +55,10 @@ const TransactionModal = ({ isOpen, onClose, transaction, farms, onSave }) => {
     }
 
     const transactionData = {
-      ...formData,
-      farmId: parseInt(formData.farmId),
-      amount: parseFloat(formData.amount),
-      date: new Date(formData.date).toISOString()
+...formData,
+      farm_id_c: parseInt(formData.farm_id_c),
+      amount_c: parseFloat(formData.amount_c),
+      date_c: formData.date_c
     };
 
     try {
@@ -117,7 +117,7 @@ const TransactionModal = ({ isOpen, onClose, transaction, farms, onSave }) => {
             type="select"
             value={formData.farmId}
             onChange={(e) => setFormData({...formData, farmId: e.target.value})}
-            options={farms.map(farm => ({ value: farm.Id.toString(), label: farm.name }))}
+options={farms.map(farm => ({ value: farm.Id.toString(), label: farm.name_c || farm.Name }))}
             required
           />
 
@@ -221,8 +221,8 @@ const Finance = () => {
   useEffect(() => {
     let filtered = transactions;
     
-    if (filterType !== "all") {
-      filtered = filtered.filter(transaction => transaction.type === filterType);
+if (filterType !== "all") {
+      filtered = filtered.filter(transaction => transaction.type_c === filterType);
     }
 
     setFilteredTransactions(filtered);
@@ -233,8 +233,8 @@ const Finance = () => {
       setFilteredTransactions(transactions);
     } else {
       const filtered = transactions.filter(transaction =>
-        transaction.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        transaction.description?.toLowerCase().includes(searchTerm.toLowerCase())
+transaction.category_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        transaction.description_c?.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredTransactions(filtered);
     }
@@ -270,13 +270,13 @@ const Finance = () => {
   if (loading) return <Loading />;
   if (error) return <Error title="Failed to load financial data" message={error} onRetry={loadData} />;
 
-  const totalIncome = transactions
-    .filter(t => t.type === "income")
-    .reduce((sum, t) => sum + t.amount, 0);
+const totalIncome = transactions
+    .filter(t => t.type_c === "income")
+    .reduce((sum, t) => sum + t.amount_c, 0);
   
   const totalExpenses = transactions
-    .filter(t => t.type === "expense")
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter(t => t.type_c === "expense")
+    .reduce((sum, t) => sum + t.amount_c, 0);
 
   const profit = totalIncome - totalExpenses;
 
@@ -287,10 +287,10 @@ const Finance = () => {
     }).format(amount);
   };
 
-  const transactionStats = {
+const transactionStats = {
     all: transactions.length,
-    income: transactions.filter(t => t.type === "income").length,
-    expense: transactions.filter(t => t.type === "expense").length
+    income: transactions.filter(t => t.type_c === "income").length,
+    expense: transactions.filter(t => t.type_c === "expense").length
   };
 
   return (

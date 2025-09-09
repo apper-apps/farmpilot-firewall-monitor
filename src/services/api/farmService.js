@@ -1,67 +1,170 @@
-import farmsData from "@/services/mockData/farms.json";
-
 class FarmService {
   constructor() {
-    this.farms = [...farmsData];
-    this.delay = 300;
+    const { ApperClient } = window.ApperSDK;
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    });
+    this.tableName = 'farm_c';
   }
 
   async getAll() {
-    await new Promise(resolve => setTimeout(resolve, this.delay));
-    return [...this.farms];
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Id" }},
+          { field: { Name: "Name" }},
+          { field: { Name: "name_c" }},
+          { field: { Name: "size_c" }},
+          { field: { Name: "size_unit_c" }},
+          { field: { Name: "location_c" }},
+          { field: { Name: "created_at_c" }}
+        ]
+      };
+
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      return response.data || [];
+    } catch (error) {
+      console.error("Error in FarmService.getAll:", error.message);
+      throw error;
+    }
   }
 
   async getById(id) {
-    await new Promise(resolve => setTimeout(resolve, this.delay));
-    const farm = this.farms.find(f => f.Id === parseInt(id));
-    if (!farm) {
-      throw new Error("Farm not found");
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Id" }},
+          { field: { Name: "Name" }},
+          { field: { Name: "name_c" }},
+          { field: { Name: "size_c" }},
+          { field: { Name: "size_unit_c" }},
+          { field: { Name: "location_c" }},
+          { field: { Name: "created_at_c" }}
+        ]
+      };
+
+      const response = await this.apperClient.getRecordById(this.tableName, parseInt(id), params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error("Error in FarmService.getById:", error.message);
+      throw error;
     }
-    return { ...farm };
   }
 
   async create(farmData) {
-    await new Promise(resolve => setTimeout(resolve, this.delay));
-    
-    const newId = Math.max(...this.farms.map(f => f.Id), 0) + 1;
-    const newFarm = {
-      Id: newId,
-      ...farmData,
-      createdAt: farmData.createdAt || new Date().toISOString()
-    };
-    
-    this.farms.push(newFarm);
-    return { ...newFarm };
+    try {
+      const params = {
+        records: [{
+          Name: farmData.Name || farmData.name_c,
+          name_c: farmData.name_c,
+          size_c: parseFloat(farmData.size_c),
+          size_unit_c: farmData.size_unit_c,
+          location_c: farmData.location_c,
+          created_at_c: farmData.created_at_c || new Date().toISOString()
+        }]
+      };
+
+      const response = await this.apperClient.createRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success);
+        const failedRecords = response.results.filter(result => !result.success);
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create farm ${failedRecords.length} records:${JSON.stringify(failedRecords)}`);
+          throw new Error("Failed to create farm record");
+        }
+        
+        return successfulRecords[0]?.data;
+      }
+    } catch (error) {
+      console.error("Error in FarmService.create:", error.message);
+      throw error;
+    }
   }
 
   async update(id, farmData) {
-    await new Promise(resolve => setTimeout(resolve, this.delay));
-    
-    const index = this.farms.findIndex(f => f.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error("Farm not found");
+    try {
+      const params = {
+        records: [{
+          Id: parseInt(id),
+          Name: farmData.Name || farmData.name_c,
+          name_c: farmData.name_c,
+          size_c: parseFloat(farmData.size_c),
+          size_unit_c: farmData.size_unit_c,
+          location_c: farmData.location_c
+        }]
+      };
+
+      const response = await this.apperClient.updateRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success);
+        const failedRecords = response.results.filter(result => !result.success);
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to update farm ${failedRecords.length} records:${JSON.stringify(failedRecords)}`);
+          throw new Error("Failed to update farm record");
+        }
+        
+        return successfulRecords[0]?.data;
+      }
+    } catch (error) {
+      console.error("Error in FarmService.update:", error.message);
+      throw error;
     }
-    
-    this.farms[index] = {
-      ...this.farms[index],
-      ...farmData,
-      Id: parseInt(id)
-    };
-    
-    return { ...this.farms[index] };
   }
 
   async delete(id) {
-    await new Promise(resolve => setTimeout(resolve, this.delay));
-    
-    const index = this.farms.findIndex(f => f.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error("Farm not found");
+    try {
+      const params = {
+        RecordIds: [parseInt(id)]
+      };
+
+      const response = await this.apperClient.deleteRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const failedRecords = response.results.filter(result => !result.success);
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to delete farm ${failedRecords.length} records:${JSON.stringify(failedRecords)}`);
+          throw new Error("Failed to delete farm record");
+        }
+        
+        return true;
+      }
+    } catch (error) {
+      console.error("Error in FarmService.delete:", error.message);
+      throw error;
     }
-    
-    this.farms.splice(index, 1);
-    return true;
   }
 }
-
 export default new FarmService();
