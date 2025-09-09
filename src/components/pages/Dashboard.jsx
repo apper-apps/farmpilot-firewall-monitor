@@ -84,7 +84,8 @@ const activeCrops = data.crops.filter(crop => crop.status_c === "Growing");
     }).format(amount);
   };
 
-  const getTaskIcon = (type) => {
+const getTaskIcon = (type) => {
+    if (!type) return 'CheckSquare'; // Default icon when type is undefined/null
     switch (type.toLowerCase()) {
       case "watering":
         return "Droplets";
@@ -100,6 +101,7 @@ const activeCrops = data.crops.filter(crop => crop.status_c === "Growing");
   };
 
   const getPriorityVariant = (priority) => {
+if (!priority) return 'secondary'; // Default variant when priority is undefined/null
     switch (priority.toLowerCase()) {
       case "high":
         return "error";
