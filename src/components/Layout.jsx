@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import ApperIcon from "@/components/ApperIcon";
 import MobileSidebar from "@/components/organisms/MobileSidebar";
 import Sidebar from "@/components/organisms/Sidebar";
-import LogoutButton from "@/components/LogoutButton";
+import LogoutButton from "@/components/atoms/LogoutButton";
 const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
